@@ -1,0 +1,27 @@
+{
+  "name": "@thefinerthings/table",
+  "version": "1.0.0",
+  "description": "promise based ORM for AWS DynamoDB",
+  "main": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thefinerthingsllc/table.git"
+  },
+  "keywords": [
+    "promise",
+    "dynamodb",
+    "aws-sdk",
+    "aws",
+    "orm"
+  ],
+  "author": "The Finer Things LLC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thefinerthingsllc/table/issues"
+  },
+  "homepage": "https://github.com/thefinerthingsllc/table#readme",
+  "dependencies": {
+    "aws-sdk": "^2.734.0",
+    "bluebird": "^3.7.2"
+  }
+}
