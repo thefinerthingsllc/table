@@ -1,3 +1,5 @@
+'use strict';
+
 var isAlphaNumeric = require('./utils').isAlphaNumeric;
 
 function or (params) {

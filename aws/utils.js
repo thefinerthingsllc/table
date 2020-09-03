@@ -1,3 +1,5 @@
+'use strict';
+
 function isAlphaNumeric (word) {
     var regex = /^[0-9a-zA-Z]+$/;
     return word.match(regex);
