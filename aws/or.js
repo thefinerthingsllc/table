@@ -34,15 +34,16 @@ function or (params) {
   var ExpressionAttributeValues = {};
 
   for (var key in params) {
-    var val = params[key].toString();
+    var val = params[key];
+    if (Array.isArray(val)) {
+      var result = or_key(key, val, FilterExpression, ExpressionAttributeValues, ExpressionAttributeNames);
+      FilterExpression += result.FilterExpression;
+      ExpressionAttributeNames = result.ExpressionAttributeNames;
+      ExpressionAttributeValues = result.ExpressionAttributeValues;
+      continue;
+    } val = val.toString();
     for (var i = 0; i < val.length; ++i) {
-      if (Array.isArray(val[i])) {
-        var result = or_key(key, val[i], FilterExpression, ExpressionAttributeValues, ExpressionAttributeNames);
-        FilterExpression += result.FilterExpression;
-        ExpressionAttributeNames = result.ExpressionAttributeNames;
-        ExpressionAttributeValues = result.ExpressionAttributeValues;
-        continue;
-      } else if (!isAlphaNumeric(val[i])) continue;
+      if (!isAlphaNumeric(val[i])) continue;
       if (!ExpressionAttributeValues[':' + val[i]]) {
         ExpressionAttributeValues[':' + val[i]] = params[key];
         ExpressionAttributeNames[`#${val[i]}`] = key;
