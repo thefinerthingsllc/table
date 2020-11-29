@@ -37,7 +37,7 @@ function and (params) {
     var val = params[key];
     if (Array.isArray(val)) {
       var result = and_key(key, val, FilterExpression, ExpressionAttributeValues, ExpressionAttributeNames);
-      FilterExpression += result.FilterExpression;
+      FilterExpression += result.FilterExpression + ' and ';
       ExpressionAttributeNames = result.ExpressionAttributeNames;
       ExpressionAttributeValues = result.ExpressionAttributeValues;
       continue;

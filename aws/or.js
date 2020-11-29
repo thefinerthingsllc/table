@@ -37,7 +37,7 @@ function or (params) {
     var val = params[key];
     if (Array.isArray(val)) {
       var result = or_key(key, val, FilterExpression, ExpressionAttributeValues, ExpressionAttributeNames);
-      FilterExpression += result.FilterExpression;
+      FilterExpression += result.FilterExpression + ' or ';
       ExpressionAttributeNames = result.ExpressionAttributeNames;
       ExpressionAttributeValues = result.ExpressionAttributeValues;
       continue;
