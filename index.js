@@ -3,7 +3,7 @@
 var Promise = require('bluebird');
 var aws = require('./aws');
 
-const id = (last) => last.id || last || null;
+const id = (last) => (last && last.id) || last || null;
 module.exports = function (params) {
   
   var me = {};
@@ -73,7 +73,7 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve(
             data ? data.Items : [],
-            data ? id(ata.LastEvaluatedKey) : null
+            data ? id(data.LastEvaluatedKey) : null
           );
         });
       });
