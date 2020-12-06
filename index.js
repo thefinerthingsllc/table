@@ -132,10 +132,10 @@ module.exports = function (params) {
       tmp.IndexName = index;
       tmp.TableName = me[name].TableName;
 
-      if (me[name].Limit !== -1) params.Limit = me[name].Limit;
+      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
       if (last) {
-        params.ExclusiveStartKey = {};
-        params.ExclusiveStartKey[me[name].Key] = last;
+        tmp.ExclusiveStartKey = {};
+        tmp.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
@@ -159,10 +159,10 @@ module.exports = function (params) {
       tmp.IndexName = index;
       tmp.TableName = me[name].TableName;
 
-      if (me[name].Limit !== -1) params.Limit = me[name].Limit;
+      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
       if (last) {
-        params.ExclusiveStartKey = {};
-        params.ExclusiveStartKey[me[name].Key] = last;
+        tmp.ExclusiveStartKey = {};
+        tmp.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
@@ -185,10 +185,10 @@ module.exports = function (params) {
       var tmp = aws.and(params);
       tmp.TableName = me[name].TableName;
   
-      if (me[name].Limit !== -1) params.Limit = me[name].Limit;
+      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
       if (last) {
-        params.ExclusiveStartKey = {};
-        params.ExclusiveStartKey[me[name].Key] = last;
+        tmp.ExclusiveStartKey = {};
+        tmp.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
@@ -211,10 +211,10 @@ module.exports = function (params) {
       var tmp = aws.or(params);
       tmp.TableName = me[name].TableName;
   
-      if (me[name].Limit !== -1) params.Limit = me[name].Limit;
+      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
       if (last) {
-        params.ExclusiveStartKey = {};
-        params.ExclusiveStartKey[me[name].Key] = last;
+        tmp.ExclusiveStartKey = {};
+        tmp.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
@@ -237,10 +237,10 @@ module.exports = function (params) {
       var tmp = aws.or(key, array);
       tmp.TableName = me[name].TableName;
   
-      if (me[name].Limit !== -1) params.Limit = me[name].Limit;
+      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
       if (last) {
-        params.ExclusiveStartKey = {};
-        params.ExclusiveStartKey[me[name].Key] = last;
+        tmp.ExclusiveStartKey = {};
+        tmp.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
