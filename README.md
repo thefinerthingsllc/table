@@ -153,16 +153,16 @@ const table = Table({
 const id = 'testId';
 const name = table.set('aws-dynamodb-table-name').TableName;
 
-let last = null; 
-let prev = last; 
+let end = null; 
+let prev = end; 
 let start = true;
 
-while (start || (last && last !== prev)) {
+while (start || (end && end !== prev)) {
     if (start) start = false;
-    table.all(name, last).then((data, l) => {
+    table.all(name, end).then(({ data, last }) => {
         if (l) {
-            prev = last;
-            last = l;
+            prev = end;
+            end = last;
         } console.log(data);
     }).catch(err => console.log(err));
 }

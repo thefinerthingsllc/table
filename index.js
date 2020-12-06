@@ -58,27 +58,6 @@ module.exports = function (params) {
       });
     },
   
-    all: function (name, last) {
-      if (!me[name] || !me[name].TableName) 
-        return new Promise((resolve, reject) => {
-          reject(`Table, ${name}, does not exist!`);
-        });
-  
-      var params = {TableName: me[name].TableName};
-      if (me[name].Limit !== -1) params.Limit = me[name].Limit;
-      if (last) params.ExclusiveStartKey = last;
-  
-      return new Promise((resolve, reject) => {
-        me.docClient.scan(params, (err, data) => {
-          if (err) reject(err);
-          else resolve(
-            data ? data.Items : [],
-            data ? id(data.LastEvaluatedKey) : null
-          );
-        });
-      });
-    },
-  
     count: function (name) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
@@ -118,6 +97,27 @@ module.exports = function (params) {
       });
     },
   
+    all: function (name, last) {
+      if (!me[name] || !me[name].TableName) 
+        return new Promise((resolve, reject) => {
+          reject(`Table, ${name}, does not exist!`);
+        });
+  
+      var params = {TableName: me[name].TableName};
+      if (me[name].Limit !== -1) params.Limit = me[name].Limit;
+      if (last) params.ExclusiveStartKey = last;
+  
+      return new Promise((resolve, reject) => {
+        me.docClient.scan(params, (err, data) => {
+          if (err) reject(err);
+          else resolve({
+            data: data ? data.Items : [],
+            last: data ? id(data.LastEvaluatedKey) : null
+          });
+        });
+      });
+    },
+  
     index: function (name, index, params, last) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
@@ -133,10 +133,10 @@ module.exports = function (params) {
       return new Promise((resolve, reject) => {
         me.docClient.scan(tmp, (err, data) => {
           if (err) reject(err);
-          else resolve(
-            data ? data.Items : [],
-            data ? id(data.LastEvaluatedKey) : null
-          );
+          else resolve({
+            data: data ? data.Items : [],
+            last: data ? id(data.LastEvaluatedKey) : null
+          });
         });
       });
     },
@@ -156,10 +156,10 @@ module.exports = function (params) {
       return new Promise((resolve, reject) => {
         me.docClient.scan(tmp, (err, data) => {
           if (err) reject(err);
-          else resolve(
-            data ? data.Items : [],
-            data ? id(data.LastEvaluatedKey) : null
-          );
+          else resolve({
+            data: data ? data.Items : [],
+            last: data ? id(data.LastEvaluatedKey) : null
+          });
         });
       });
     },
@@ -178,10 +178,10 @@ module.exports = function (params) {
       return new Promise((resolve, reject) => {
         me.docClient.scan(tmp, (err, data) => {
           if (err) reject(err);
-          else resolve(
-            data ? data.Items : [],
-            data ? id(data.LastEvaluatedKey) : null
-          );
+          else resolve({
+            data: data ? data.Items : [],
+            last: data ? id(data.LastEvaluatedKey) : null
+          });
         });
       });
     },
@@ -200,10 +200,10 @@ module.exports = function (params) {
       return new Promise((resolve, reject) => {
         me.docClient.scan(tmp, (err, data) => {
           if (err) reject(err);
-          else resolve(
-            data ? data.Items : [],
-            data ? id(data.LastEvaluatedKey) : null
-          );
+          else resolve({
+            data: data ? data.Items : [],
+            last: data ? id(data.LastEvaluatedKey) : null
+          });
         });
       });
     },
@@ -222,10 +222,10 @@ module.exports = function (params) {
       return new Promise((resolve, reject) => {
         me.docClient.scan(tmp, (err, data) => {
           if (err) reject(err);
-          else resolve(
-            data ? data.Items : [],
-            data ? id(data.LastEvaluatedKey) : null
-          );
+          else resolve({
+            data: data ? data.Items : [],
+            last: data ? id(data.LastEvaluatedKey) : null
+          });
         });
       });
     },
