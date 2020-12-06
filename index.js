@@ -3,6 +3,7 @@
 var Promise = require('bluebird');
 var aws = require('./aws');
 
+const id = (last) => last.id || last || null;
 module.exports = function (params) {
   
   var me = {};
@@ -72,7 +73,7 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve(
             data ? data.Items : [],
-            data ? data.LastEvaluatedKey : null
+            data ? id(ata.LastEvaluatedKey) : null
           );
         });
       });
@@ -134,7 +135,7 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve(
             data ? data.Items : [],
-            data ? data.LastEvaluatedKey : null
+            data ? id(data.LastEvaluatedKey) : null
           );
         });
       });
@@ -157,7 +158,7 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve(
             data ? data.Items : [],
-            data ? data.LastEvaluatedKey : null
+            data ? id(data.LastEvaluatedKey) : null
           );
         });
       });
@@ -179,7 +180,7 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve(
             data ? data.Items : [],
-            data ? data.LastEvaluatedKey : null
+            data ? id(data.LastEvaluatedKey) : null
           );
         });
       });
@@ -201,7 +202,7 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve(
             data ? data.Items : [],
-            data ? data.LastEvaluatedKey : null
+            data ? id(data.LastEvaluatedKey) : null
           );
         });
       });
@@ -223,7 +224,7 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve(
             data ? data.Items : [],
-            data ? data.LastEvaluatedKey : null
+            data ? id(data.LastEvaluatedKey) : null
           );
         });
       });

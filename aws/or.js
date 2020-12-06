@@ -59,7 +59,6 @@ function or (params) {
     } FilterExpression += '#' + val + ' = ' + ':' + val + ' or ';
   } FilterExpression = FilterExpression.substr(0, FilterExpression.length - 4);
  
-  console.log(FilterExpression);
   return {
     FilterExpression: FilterExpression,
     ExpressionAttributeNames: ExpressionAttributeNames,
