@@ -73,7 +73,7 @@ table.all(name, last)
 ```js
 table.index(name, index, key, params, last)
 ```
-* `key` - string (table name that you wish to reference)
+* `key` - string (name of key that is indexed)
 * `name` - string (table name that you wish to reference)
 * `index` - string (name of the index that is going to scanned)
 * `params` - object (key-value pairs to match using an `and` operation during scan)
@@ -161,6 +161,8 @@ let start = true;
 while (start || (end && end !== prev)) {
   if (start) start = false;
   table.all(name, end).then(({ data, last }) => {
+    // last is just the id of the last value not an object
+    // you may need to do: get(last).then(data => { ... })
     if (last) {
       prev = end;
       end = last;
