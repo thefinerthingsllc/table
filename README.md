@@ -11,25 +11,25 @@ npm i @thefinerthings/table
 const Table = require('@thefinerthings/table')
 
 const table = Table({
-    region: '<aws region>',
-    accessKeyId: '<aws access key id>',
-    secretAccessKey: '<aws secret access key>',
+  region: '<aws region>',
+  accessKeyId: '<aws access key id>',
+  secretAccessKey: '<aws secret access key>',
 })
 
 const id = 'testId';
 const name = table.set('aws-dynamodb-table-name').TableName;
 
 table.get(name, id).then((data) => {
-    console.log(data);
+  console.log(data);
 }).catch(err => console.log(err));
 ```
 
 ### API
 ```js
 Table({
-    region: '<aws region>',
-    accessKeyId: '<aws access key id>',
-    secretAccessKey: '<aws secret access key>',
+  region: '<aws region>',
+  accessKeyId: '<aws access key id>',
+  secretAccessKey: '<aws secret access key>',
 })
 ```
 * `region` - string (aws credential)
@@ -71,8 +71,9 @@ table.all(name, last)
   * this is returned when you have more items in the table than is allowed by the limit
 
 ```js
-table.index(name, index, params, last)
+table.index(name, index, key, params, last)
 ```
+* `key` - string (table name that you wish to reference)
 * `name` - string (table name that you wish to reference)
 * `index` - string (name of the index that is going to scanned)
 * `params` - object (key-value pairs to match using an `and` operation during scan)
@@ -145,9 +146,9 @@ table.delete(name, id)
 const Table = require('@thefinerthings/table')
 
 const table = Table({
-    region: '<aws region>',
-    accessKeyId: '<aws access key id>',
-    secretAccessKey: '<aws secret access key>',
+  region: '<aws region>',
+  accessKeyId: '<aws access key id>',
+  secretAccessKey: '<aws secret access key>',
 })
 
 const id = 'testId';
@@ -158,12 +159,12 @@ let prev = end;
 let start = true;
 
 while (start || (end && end !== prev)) {
-    if (start) start = false;
-    table.all(name, end).then(({ data, last }) => {
-        if (l) {
-            prev = end;
-            end = last;
-        } console.log(data);
-    }).catch(err => console.log(err));
+  if (start) start = false;
+  table.all(name, end).then(({ data, last }) => {
+    if (last) {
+      prev = end;
+      end = last;
+    } console.log(data);
+  }).catch(err => console.log(err));
 }
 ```
