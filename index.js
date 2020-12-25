@@ -122,7 +122,7 @@ module.exports = function (params) {
       });
     },
   
-    index: function (name, index, key, params, last) {
+    index: function (name, index, params, last) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
@@ -133,11 +133,10 @@ module.exports = function (params) {
       tmp.TableName = me[name].TableName;
 
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
-      if (last) {
+      if (last && last.length) {
         tmp.ExclusiveStartKey = {};
-        tmp.ExclusiveStartKey[key] = params[key];
         tmp.ExclusiveStartKey[me[name].Key] = last;
-      }
+      } else if (last) tmp.ExclusiveStartKey = last;
   
       return new Promise((resolve, reject) => {
         me.docClient.scan(tmp, (err, data) => {

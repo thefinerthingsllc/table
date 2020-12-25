@@ -71,13 +71,12 @@ table.all(name, last)
   * this is returned when you have more items in the table than is allowed by the limit
 
 ```js
-table.index(name, index, key, params, last)
+table.index(name, index, params, last)
 ```
-* `key` - string (name of key that is indexed)
 * `name` - string (table name that you wish to reference)
 * `index` - string (name of the index that is going to scanned)
 * `params` - object (key-value pairs to match using an `and` operation during scan)
-* `last` - string (key of the last evaluated item)
+* `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
 
 ```js
