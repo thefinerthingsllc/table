@@ -56,7 +56,7 @@ This function creates a table in DyanmoDB if it has not been created using the A
 table.get(name, id)
 ```
 * `name` - string (table name that you wish to reference)
-* `id` - string or number (id of the item you wish to fetch)
+* `id` - string (id of the item you wish to fetch)
 
 ```js
 table.count(name)

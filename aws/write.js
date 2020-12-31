@@ -10,7 +10,7 @@ function set (Key, params) {
 
   for (var key in params) {
     if (key === Key) continue;
-    if (!params[key]) continue;
+    if (!params[key] && params[key] !== false) continue;
     var val = params[key].toString();
     for (var i = 0; i < val.length; ++i) {
       if (!isAlphaNumeric(val[i])) continue;

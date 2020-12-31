@@ -9,7 +9,7 @@ function or_key (key, array, fe, eav, ean) {
   var ExpressionAttributeValues = eav || {};
 
   for (var a of array) {
-    if (!a) continue;
+    if (!a && a !== false) continue;
     var val = a.toString();
     for (var i = 0; i < val.length; ++i) {
       if (!isAlphaNumeric(val[i])) continue;
@@ -39,7 +39,7 @@ function or (params) {
   var ExpressionAttributeValues = {};
 
   for (var key in params) {
-    if (!params[key]) continue;
+    if (!params[key] && params[key] !== false) continue;
     var val = params[key];
     if (Array.isArray(val)) {
       var result = or_key(key, val, FilterExpression, ExpressionAttributeValues, ExpressionAttributeNames);
