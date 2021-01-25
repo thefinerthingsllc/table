@@ -18,9 +18,9 @@ module.exports = function (params) {
       if (!table_name) return false;
   
       me[table_name] = {
-        TableName: table_name,
         Key: key || 'id',
-        Limit: limit || -1
+        Limit: limit || -1,
+        TableName: table_name,
       };
   
       return me[table_name];
@@ -33,7 +33,7 @@ module.exports = function (params) {
         });
   
       var schema = [
-        { AttributeName: me[name].Key, AttributeType: 'S'}
+        { AttributeName: me[name].Key, AttributeType: 'S' }
       ];
   
       var keys = [
@@ -82,11 +82,15 @@ module.exports = function (params) {
         });
   
       var key = {};
-      key[me[name].Key] = id;
+      if (!id.length && typeof id == typeof {})
+        for (var i in id)
+          key[i] = id[i];
+      else 
+        key[me[name].Key] = id;
   
       var tmp = {
+        Key: key,
         TableName: me[name].TableName,
-        Key: key
       };
   
       return new Promise((resolve, reject) => {
@@ -103,16 +107,50 @@ module.exports = function (params) {
           reject(`Table, ${name}, does not exist!`);
         });
   
-      var params = {TableName: me[name].TableName};
+      var params = { TableName: me[name].TableName };
       if (me[name].Limit !== -1) params.Limit = me[name].Limit;
 
       if (last) {
         params.ExclusiveStartKey = {};
-        params.ExclusiveStartKey[me[name].Key] = last;
+        if (!last.length && typeof last == typeof {})
+          for (var l in last)
+            params.ExclusiveStartKey[l] = last[l];
+        else
+          params.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
         me.docClient.scan(params, (err, data) => {
+          if (err) reject(err);
+          else resolve({
+            data: data ? data.Items : [],
+            last: data ? id(data.LastEvaluatedKey) : null
+          });
+        });
+      });
+    },
+
+    query_all: function (name, last) {
+      if (!me[name] || !me[name].TableName) 
+        return new Promise((resolve, reject) => {
+          reject(`Table, ${name}, does not exist!`);
+        });
+  
+      var tmp = { TableName: me[name].TableName };
+      // TODO: build query for all where id is not_null and sort key is not null
+      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+
+      if (last) {
+        tmp.ExclusiveStartKey = {};
+        if (!last.length && typeof last == typeof {})
+          for (var l in last)
+            tmp.ExclusiveStartKey[l] = last[l];
+        else
+          tmp.ExclusiveStartKey[me[name].Key] = last;
+      }
+  
+      return new Promise((resolve, reject) => {
+        me.docClient.query(tmp, (err, data) => {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
@@ -133,10 +171,14 @@ module.exports = function (params) {
       tmp.TableName = me[name].TableName;
 
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
-      if (last && last.length) {
+      if (last) {
         tmp.ExclusiveStartKey = {};
-        tmp.ExclusiveStartKey[me[name].Key] = last;
-      } else if (last) tmp.ExclusiveStartKey = last;
+        if (!last.length && typeof last == typeof {})
+          for (var l in last)
+            tmp.ExclusiveStartKey[l] = last[l];
+        else
+          tmp.ExclusiveStartKey[me[name].Key] = last;
+      }
   
       return new Promise((resolve, reject) => {
         me.docClient.scan(tmp, (err, data) => {
@@ -162,7 +204,11 @@ module.exports = function (params) {
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
       if (last) {
         tmp.ExclusiveStartKey = {};
-        tmp.ExclusiveStartKey[me[name].Key] = last;
+        if (!last.length && typeof last == typeof {})
+          for (var l in last)
+            tmp.ExclusiveStartKey[l] = last[l];
+        else
+          tmp.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
@@ -188,7 +234,11 @@ module.exports = function (params) {
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
       if (last) {
         tmp.ExclusiveStartKey = {};
-        tmp.ExclusiveStartKey[me[name].Key] = last;
+        if (!last.length && typeof last == typeof {})
+          for (var l in last)
+            tmp.ExclusiveStartKey[l] = last[l];
+        else
+          tmp.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
@@ -214,7 +264,11 @@ module.exports = function (params) {
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
       if (last) {
         tmp.ExclusiveStartKey = {};
-        tmp.ExclusiveStartKey[me[name].Key] = last;
+        if (!last.length && typeof last == typeof {})
+          for (var l in last)
+            tmp.ExclusiveStartKey[l] = last[l];
+        else
+          tmp.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
@@ -240,11 +294,75 @@ module.exports = function (params) {
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
       if (last) {
         tmp.ExclusiveStartKey = {};
-        tmp.ExclusiveStartKey[me[name].Key] = last;
+        if (!last.length && typeof last == typeof {})
+          for (var l in last)
+            tmp.ExclusiveStartKey[l] = last[l];
+        else
+          tmp.ExclusiveStartKey[me[name].Key] = last;
       }
   
       return new Promise((resolve, reject) => {
         me.docClient.scan(tmp, (err, data) => {
+          if (err) reject(err);
+          else resolve({
+            data: data ? data.Items : [],
+            last: data ? id(data.LastEvaluatedKey) : null
+          });
+        });
+      });
+    },
+
+    scan: function (name, params, last) {
+      if (!me[name] || !me[name].TableName) 
+        return new Promise((resolve, reject) => {
+          reject(`Table, ${name}, does not exist!`);
+        });
+  
+      var tmp = params;
+      tmp.TableName = me[name].TableName;
+  
+      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (last) {
+        tmp.ExclusiveStartKey = {};
+        if (!last.length && typeof last == typeof {})
+          for (var l in last)
+            tmp.ExclusiveStartKey[l] = last[l];
+        else
+          tmp.ExclusiveStartKey[me[name].Key] = last;
+      }
+  
+      return new Promise((resolve, reject) => {
+        me.docClient.scan(tmp, (err, data) => {
+          if (err) reject(err);
+          else resolve({
+            data: data ? data.Items : [],
+            last: data ? id(data.LastEvaluatedKey) : null
+          });
+        });
+      });
+    },
+
+    query: function (name, params, last) {
+      if (!me[name] || !me[name].TableName) 
+        return new Promise((resolve, reject) => {
+          reject(`Table, ${name}, does not exist!`);
+        });
+  
+      var tmp = params;
+      tmp.TableName = me[name].TableName;
+      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+
+      if (last) {
+        tmp.ExclusiveStartKey = {};
+        if (!last.length && typeof last == typeof {})
+          for (var l in last)
+            tmp.ExclusiveStartKey[l] = last[l];
+        else
+          tmp.ExclusiveStartKey[me[name].Key] = last;
+      }
+  
+      return new Promise((resolve, reject) => {
+        me.docClient.query(tmp, (err, data) => {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
@@ -261,9 +379,9 @@ module.exports = function (params) {
         });
   
       var tmp = {
+        Item: params,
         TableName: me[name].TableName,
-        Item: params
-      }
+      };
   
       return new Promise((resolve, reject) => {
         me.docClient.put(tmp, (err, data) => {
@@ -327,8 +445,8 @@ module.exports = function (params) {
       key[me[name].Key] = id;
   
       var tmp = {
+        Key: key,
         TableName: me[name].TableName,
-        Key: key
       };
   
       return new Promise((resolve, reject) => {

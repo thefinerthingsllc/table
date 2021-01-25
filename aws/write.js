@@ -14,12 +14,12 @@ function set (Key, params) {
     var val = params[key].toString();
     for (var i = 0; i < val.length; ++i) {
       if (!isAlphaNumeric(val[i])) continue;
-      if (!ExpressionAttributeValues[`:${val[i]}`]) {
-        ExpressionAttributeValues[`:${val[i]}`] = params[key];
-        ExpressionAttributeNames[`#${val[i]}`] = key;
+      if (!ExpressionAttributeValues[':' + val[i]]) {
+        ExpressionAttributeValues[':' + val[i]] = params[key];
+        ExpressionAttributeNames['#' + val[i]] = key;
         val = val[i];
       }
-    } UpdateExpression += `#${val} = :${val} , `;
+    } UpdateExpression += '#' + val[i] + ' = ' + ':' + val + ' , ';
   } UpdateExpression = UpdateExpression.substr(
     0, UpdateExpression.length - 3
   );
@@ -42,11 +42,11 @@ function unset (Key, params) {
     for (var i = 0; i < key.length; ++i) {
       k = key[i];
       if (!isAlphaNumeric(k)) continue;
-      if (!ExpressionAttributeNames[`#${k}`]) {
-        ExpressionAttributeNames[`#${k}`] = key;
+      if (!ExpressionAttributeNames['#' + k]) {
+        ExpressionAttributeNames['#' + k] = key;
         i = key.length;
       }
-    } UpdateExpression += `#${k} , `;
+    } UpdateExpression += '#' + k + ' , ';
   } UpdateExpression = UpdateExpression.substr(
     0, UpdateExpression.length - 3
   );

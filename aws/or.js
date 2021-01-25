@@ -8,7 +8,8 @@ function or_key (key, array, fe, eav, ean) {
   var ExpressionAttributeNames = ean || {};
   var ExpressionAttributeValues = eav || {};
 
-  for (var a of array) {
+  for (var j = 0; j < array.length; j++) {
+    var a = array[j];
     if (!a && a !== false) continue;
     var val = a.toString();
     for (var i = 0; i < val.length; ++i) {
@@ -16,12 +17,12 @@ function or_key (key, array, fe, eav, ean) {
       if (ExpressionAttributeValues[':' + val[i]] === a) continue;
       else if (!ExpressionAttributeValues[':' + val[i]]) {
           ExpressionAttributeValues[':' + val[i]] = a;
-          ExpressionAttributeNames[`#${val[i]}`] = key;
+          ExpressionAttributeNames['#' + val[i]] = key;
           val = val[i];
       }
     } if (val.length > 1) {
       ExpressionAttributeValues[':' + val] = val;
-      ExpressionAttributeNames[`#${val}`] = key;
+      ExpressionAttributeNames['#' + val[i]] = key;
     } FilterExpression += '#' + val + ' = ' + ':' + val + ' or ';
   } FilterExpression = FilterExpression.substr(0, FilterExpression.length - 4);
 
@@ -52,12 +53,12 @@ function or (params) {
       if (!isAlphaNumeric(val[i])) continue;
       if (!ExpressionAttributeValues[':' + val[i]]) {
         ExpressionAttributeValues[':' + val[i]] = params[key];
-        ExpressionAttributeNames[`#${val[i]}`] = key;
+        ExpressionAttributeNames['#' + val[i]] = key;
         val = val[i];
       }
     } if (val.length > 1) {
       ExpressionAttributeValues[':' + val] = val;
-      ExpressionAttributeNames[`#${val}`] = key;
+      ExpressionAttributeNames['#' + val[i]] = key;
     } FilterExpression += '#' + val + ' = ' + ':' + val + ' or ';
   } FilterExpression = FilterExpression.substr(0, FilterExpression.length - 4);
  

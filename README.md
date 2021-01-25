@@ -23,6 +23,7 @@ table.get(name, id).then((data) => {
   console.log(data);
 }).catch(err => console.log(err));
 ```
+* The schema for the following methods assumes that your data is a bunch of strings. Queries or scans can be customized through the `scan` or  `query` functions to account for any other data types that have been defined.
 
 ### API
 ```js
@@ -41,7 +42,7 @@ table.set(table_name, key, limit)
 ```
 This function sets the desired table and basic attributes that are used throughout the `Table` class.
 * `table_name` - string (name of the DynamoDB table to be used)
-* `key` - string (the primary key of the DynamoDB table)
+* `key` - string or object (the primary key of the DynamoDB table)
   * defaults to `id`
 * `limit` - number (the number of items that will be returned on each fetch)
   * defaults to `AWS` which is currently `1MB`
@@ -56,7 +57,8 @@ This function creates a table in DyanmoDB if it has not been created using the A
 table.get(name, id)
 ```
 * `name` - string (table name that you wish to reference)
-* `id` - string (id of the item you wish to fetch)
+* `id` - string or object (id of the item you wish to fetch)
+  * object may contain the partition key and sort key for object lookup
 
 ```js
 table.count(name)
@@ -67,7 +69,15 @@ table.count(name)
 table.all(name, last)
 ```
 * `name` - string (table name that you wish to reference)
-* `last` - string (key of the last evaluated item)
+* `last` - string or object (key of the last evaluated item)
+  * this is returned when you have more items in the table than is allowed by the limit
+
+```js
+table.query_all(name, last)
+```
+This is good to use for tables with a partition and sort key.
+* `name` - string (table name that you wish to reference)
+* `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
 
 ```js
@@ -86,7 +96,7 @@ table.index_search(name, index, key, array, last)
 * `index` - string (name of the index that is going to scanned)
 * `key` - string (key to compare against while scanning the index)
 * `array` - array (values match using an `or` operation during scan)
-* `last` - string (key of the last evaluated item)
+* `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
 
 ```js
@@ -94,7 +104,7 @@ table.find(name, params, last)
 ```
 * `name` - string (table name that you wish to reference)
 * `params` - object (key-value pairs to match using an `and` operation during scan)
-* `last` - string (key of the last evaluated item)
+* `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
 
 ```js
@@ -102,7 +112,7 @@ table.grab(name, params, last)
 ```
 * `name` - string (table name that you wish to reference)
 * `params` - object (key-value pairs to match using an `or` operation during scan)
-* `last` - string (key of the last evaluated item)
+* `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
 
 ```js
@@ -111,7 +121,26 @@ table.search(name, key, array, last)
 * `name` - string (table name that you wish to reference)
 * `key` - string (key to compare against while scanning the index)
 * `array` - array (values match using an `or` operation during scan)
-* `last` - string (key of the last evaluated item)
+* `last` - string or object (key of the last evaluated item)
+  * this is returned when you have more items in the table than is allowed by the limit
+
+```js
+table.scan(name, params, last)
+```
+* `name` - string (table name that you wish to reference)
+* `params` - object 
+  * generally, contains values for [FilterExpression, ExpressionAttributeNames, ExpressionAttributeValues](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html)
+* `last` - string or object (key of the last evaluated item)
+  * this is returned when you have more items in the table than is allowed by the limit
+
+```js
+table.query(name, params, last)
+```
+This is good to use for tables with a partition and sort key.
+* `name` - string (table name that you wish to reference)
+* `params` - object
+  * generally, contains values for [FilterExpression, ExpressionAttributeNames, ExpressionAttributeValues](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html)
+* `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
 
 ```js
@@ -124,7 +153,7 @@ table.create(name, params)
 table.update(name, id, params)
 ```
 * `name` - string (table name that you wish to reference)
-* `id` - string or number (id of the item you wish to update)
+* `id` - string (id of the item you wish to update)
 * `params` - object (key-value pairs update on the item)
 
 ```js
@@ -138,7 +167,7 @@ table.remove(name, params)
 table.delete(name, id)
 ```
 * `name` - string (table name that you wish to reference)
-* `id` - string or number (id of the item you wish to delete from the table)
+* `id` - string (id of the item you wish to delete from the table)
 
 #### Example
 ```js
