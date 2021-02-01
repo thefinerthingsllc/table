@@ -19,7 +19,8 @@ const table = Table({
 const id = 'testId';
 const name = table.set('aws-dynamodb-table-name').TableName;
 
-table.get(name, id).then((data) => {
+// Each API returns the data, or an object containing { data, last }
+table.get(name, id).then(data => {
   console.log(data);
 }).catch(err => console.log(err));
 ```

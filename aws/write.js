@@ -19,7 +19,10 @@ function set (Key, params) {
         ExpressionAttributeNames['#' + val[i]] = key;
         val = val[i];
       }
-    } UpdateExpression += '#' + val[i] + ' = ' + ':' + val + ' , ';
+    } if (val.length > 1) {
+      ExpressionAttributeValues[':' + val] = val;
+      ExpressionAttributeNames['#' + val[i]] = key;
+    } UpdateExpression += '#' + val + ' = ' + ':' + val + ' , ';
   } UpdateExpression = UpdateExpression.substr(
     0, UpdateExpression.length - 3
   );
