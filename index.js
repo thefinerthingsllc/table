@@ -320,8 +320,8 @@ module.exports = function (params) {
   
       var tmp = params;
       tmp.TableName = me[name].TableName;
-  
-      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (!tmp.Limit && me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+
       if (last) {
         tmp.ExclusiveStartKey = {};
         if (!last.length && typeof last == typeof {})
@@ -350,7 +350,7 @@ module.exports = function (params) {
   
       var tmp = params;
       tmp.TableName = me[name].TableName;
-      if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (!tmp.Limit && me[name].Limit !== -1) tmp.Limit = me[name].Limit;
 
       if (last) {
         tmp.ExclusiveStartKey = {};
