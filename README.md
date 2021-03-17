@@ -67,31 +67,34 @@ table.count(name)
 * `name` - string (table name that you wish to reference)
 
 ```js
-table.all(name, last)
+table.all(name, last, limit)
 ```
 * `name` - string (table name that you wish to reference)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
+* `limit` - number
 
 ```js
-table.query_all(name, last)
+table.query_all(name, last, limit)
 ```
 This is good to use for tables with a partition and sort key.
 * `name` - string (table name that you wish to reference)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
+* `limit` - number
 
 ```js
-table.index(name, index, params, last)
+table.index(name, index, params, last, limit)
 ```
 * `name` - string (table name that you wish to reference)
 * `index` - string (name of the index that is going to scanned)
 * `params` - object (key-value pairs to match using an `and` operation during scan)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
+* `limit` - number
 
 ```js
-table.index_search(name, index, key, array, last)
+table.index_search(name, index, key, array, last, limit)
 ```
 * `name` - string (table name that you wish to reference)
 * `index` - string (name of the index that is going to scanned)
@@ -99,31 +102,35 @@ table.index_search(name, index, key, array, last)
 * `array` - array (values match using an `or` operation during scan)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
+* `limit` - number
 
 ```js
-table.find(name, params, last)
+table.find(name, params, last, limit)
 ```
 * `name` - string (table name that you wish to reference)
 * `params` - object (key-value pairs to match using an `and` operation during scan)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
+* `limit` - number
 
 ```js
-table.grab(name, params, last)
+table.grab(name, params, last, limit)
 ```
 * `name` - string (table name that you wish to reference)
 * `params` - object (key-value pairs to match using an `or` operation during scan)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
+* `limit` - number
 
 ```js
-table.search(name, key, array, last)
+table.search(name, key, array, last, limit)
 ```
 * `name` - string (table name that you wish to reference)
 * `key` - string (key to compare against while scanning the index)
 * `array` - array (values match using an `or` operation during scan)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
+* `limit` - number
 
 ```js
 table.scan(name, params, last)
@@ -133,6 +140,7 @@ table.scan(name, params, last)
   * generally, contains values for [FilterExpression, ExpressionAttributeNames, ExpressionAttributeValues](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
+* `limit` - number
 
 ```js
 table.query(name, params, last)
@@ -143,6 +151,7 @@ This is good to use for tables with a partition and sort key.
   * generally, contains values for [FilterExpression, ExpressionAttributeNames, ExpressionAttributeValues](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
+* `limit` - number
 
 ```js
 table.create(name, params)

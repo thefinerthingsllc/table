@@ -101,7 +101,7 @@ module.exports = function (params) {
       });
     },
   
-    all: function (name, last) {
+    all: function (name, last, limit) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
@@ -109,6 +109,7 @@ module.exports = function (params) {
   
       var params = { TableName: me[name].TableName };
       if (me[name].Limit !== -1) params.Limit = me[name].Limit;
+      if (limit) params.Limit = limit;
 
       if (last) {
         params.ExclusiveStartKey = {};
@@ -130,7 +131,7 @@ module.exports = function (params) {
       });
     },
 
-    query_all: function (name, last) {
+    query_all: function (name, last, limit) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
@@ -139,6 +140,7 @@ module.exports = function (params) {
       var tmp = { TableName: me[name].TableName };
       // TODO: build query for all where id is not_null and sort key is not null
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (limit) tmp.Limit = limit;
 
       if (last) {
         tmp.ExclusiveStartKey = {};
@@ -160,7 +162,7 @@ module.exports = function (params) {
       });
     },
   
-    index: function (name, index, params, last) {
+    index: function (name, index, params, last, limit) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
@@ -171,6 +173,7 @@ module.exports = function (params) {
       tmp.TableName = me[name].TableName;
 
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (limit) tmp.Limit = limit;
       if (last) {
         tmp.ExclusiveStartKey = {};
         if (!last.length && typeof last == typeof {})
@@ -191,7 +194,7 @@ module.exports = function (params) {
       });
     },
   
-    index_search: function (name, index, key, array, last) {
+    index_search: function (name, index, key, array, last, limit) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
@@ -202,6 +205,7 @@ module.exports = function (params) {
       tmp.TableName = me[name].TableName;
 
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (limit) tmp.Limit = limit;
       if (last) {
         tmp.ExclusiveStartKey = {};
         if (!last.length && typeof last == typeof {})
@@ -222,7 +226,7 @@ module.exports = function (params) {
       });
     },
   
-    find: function (name, params, last) {
+    find: function (name, params, last, limit) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
@@ -232,6 +236,7 @@ module.exports = function (params) {
       tmp.TableName = me[name].TableName;
   
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (limit) tmp.Limit = limit;
       if (last) {
         tmp.ExclusiveStartKey = {};
         if (!last.length && typeof last == typeof {})
@@ -252,7 +257,7 @@ module.exports = function (params) {
       });
     },
   
-    grab: function (name, params, last) {
+    grab: function (name, params, last, limit) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
@@ -262,6 +267,7 @@ module.exports = function (params) {
       tmp.TableName = me[name].TableName;
   
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (limit) tmp.Limit = limit;
       if (last) {
         tmp.ExclusiveStartKey = {};
         if (!last.length && typeof last == typeof {})
@@ -282,7 +288,7 @@ module.exports = function (params) {
       });
     },
   
-    search: function (name, key, array, last) {
+    search: function (name, key, array, last, limit) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
@@ -292,6 +298,7 @@ module.exports = function (params) {
       tmp.TableName = me[name].TableName;
   
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (limit) tmp.Limit = limit;
       if (last) {
         tmp.ExclusiveStartKey = {};
         if (!last.length && typeof last == typeof {})
