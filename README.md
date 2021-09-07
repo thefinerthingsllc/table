@@ -140,7 +140,6 @@ table.scan(name, params, last)
   * generally, contains values for [FilterExpression, ExpressionAttributeNames, ExpressionAttributeValues](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
-* `limit` - number
 
 ```js
 table.query(name, params, last)
@@ -151,7 +150,23 @@ This is good to use for tables with a partition and sort key.
   * generally, contains values for [FilterExpression, ExpressionAttributeNames, ExpressionAttributeValues](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Scan.html)
 * `last` - string or object (key of the last evaluated item)
   * this is returned when you have more items in the table than is allowed by the limit
-* `limit` - number
+
+Example
+```js
+table.query(
+  name, {
+    IndexName: 'partition-sort-index',
+    KeyConditionExpression: '#t = :em',
+    ExpressionAttributeNames: {
+      "#t": 'partition',
+    },
+    ExpressionAttributeValues: {
+      ":em": 'value',
+    },
+    ScanIndexForward: false,
+  }, params
+)
+```
 
 ```js
 table.create(name, params)
