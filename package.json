@@ -1,6 +1,6 @@
 {
   "name": "@thefinerthings/table",
-  "version": "2.1.9",
+  "version": "2.2.0",
   "description": "promise based ORM for AWS DynamoDB",
   "main": "index",
   "repository": {
