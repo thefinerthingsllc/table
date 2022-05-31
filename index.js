@@ -1,9 +1,11 @@
 'use strict';
 
 var Promise = require('bluebird');
-var aws = require('./aws');
 
-const id = (last) => (last && last.id) || last || null;
+var aws = require('./aws');
+var gcp = require('./gcp');
+
+const ID = (last) => (last && last.id) || last || null;
 module.exports = function (params) {
   
   var me = {};
@@ -12,6 +14,12 @@ module.exports = function (params) {
   me['info'] = params;
   me['dynamodb'] = res.dynamodb;
   me['docClient'] = res.docClient;
+
+  if (params.gcp) {
+    var gres = gcp.init(params.gcp);
+    me['datastore'] = gres.datastore;
+    me['Datastore'] = gres.Datastore;
+  }
 
   return {
     set: function (table_name, key, limit) {
@@ -26,11 +34,16 @@ module.exports = function (params) {
       return me[table_name];
     },
   
-    table: function (name) {
+    table: function (name, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+      
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+
+      if (isGCP) return gcp.table.table(me, name);
   
       var schema = [
         { AttributeName: me[name].Key, AttributeType: 'S' }
@@ -58,11 +71,16 @@ module.exports = function (params) {
       });
     },
   
-    count: function (name) {
+    count: function (name, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+      
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+    
+      if (isGCP) return gcp.table.count(me, name);
   
       return new Promise((resolve, reject) => {
         me.docClient.scan({
@@ -75,11 +93,16 @@ module.exports = function (params) {
       });
     },
   
-    get: function (name, id) {
+    get: function (name, id, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+      
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+
+      if (isGCP) return gcp.table.get(me, name, id);
   
       var key = {};
       if (!id.length && typeof id == typeof {})
@@ -101,11 +124,16 @@ module.exports = function (params) {
       });
     },
   
-    all: function (name, last, limit) {
+    all: function (name, last, limit, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+  
+      if (isGCP) return gcp.table.all(me, name, last, limit);
   
       var params = { TableName: me[name].TableName };
       if (me[name].Limit !== -1) params.Limit = me[name].Limit;
@@ -125,18 +153,23 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
-            last: data ? id(data.LastEvaluatedKey) : null
+            last: data ? ID(data.LastEvaluatedKey) : null
           });
         });
       });
     },
 
-    query_all: function (name, last, limit) {
+    query_all: function (name, last, limit, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
+      if (isGCP) return gcp.table.query_all(me, name, last, limit);
+
       var tmp = { TableName: me[name].TableName };
       // TODO: build query for all where id is not_null and sort key is not null
       if (me[name].Limit !== -1) tmp.Limit = me[name].Limit;
@@ -156,18 +189,23 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
-            last: data ? id(data.LastEvaluatedKey) : null
+            last: data ? ID(data.LastEvaluatedKey) : null
           });
         });
       });
     },
   
-    index: function (name, index, params, last, limit) {
+    index: function (name, index, params, last, limit, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
   
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+
+      if (isGCP) return gcp.table.index(me, name, index, params, last, limit);
+      
       var tmp = aws.index(params);
       tmp.IndexName = index;
       tmp.TableName = me[name].TableName;
@@ -188,18 +226,23 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
-            last: data ? id(data.LastEvaluatedKey) : null
+            last: data ? ID(data.LastEvaluatedKey) : null
           });
         });
       });
     },
   
-    index_search: function (name, index, key, array, last, limit) {
+    index_search: function (name, index, key, array, last, limit, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
   
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+
+      if (isGCP) return gcp.table.index_search(me, name, index, key, array, last, limit);
+
       var tmp = aws.or_key(key, array);
       tmp.IndexName = index;
       tmp.TableName = me[name].TableName;
@@ -220,18 +263,23 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
-            last: data ? id(data.LastEvaluatedKey) : null
+            last: data ? ID(data.LastEvaluatedKey) : null
           });
         });
       });
     },
   
-    find: function (name, params, last, limit) {
+    find: function (name, params, last, limit, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+      
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
+      if (isGCP) return gcp.table.find(me, name, params, last, limit);
+
       var tmp = aws.and(params);
       tmp.TableName = me[name].TableName;
   
@@ -251,18 +299,23 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
-            last: data ? id(data.LastEvaluatedKey) : null
+            last: data ? ID(data.LastEvaluatedKey) : null
           });
         });
       });
     },
   
-    grab: function (name, params, last, limit) {
+    grab: function (name, params, last, limit, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
   
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+  
+      if (isGCP) return gcp.table.grab(me, name, params, last, limit);
+
       var tmp = aws.or(params);
       tmp.TableName = me[name].TableName;
   
@@ -282,18 +335,23 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
-            last: data ? id(data.LastEvaluatedKey) : null
+            last: data ? ID(data.LastEvaluatedKey) : null
           });
         });
       });
     },
   
-    search: function (name, key, array, last, limit) {
+    search: function (name, key, array, last, limit, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+      
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
+      if (isGCP) return gcp.table.search(me, name, key, array, last, limit);
+        
       var tmp = aws.or(key, array);
       tmp.TableName = me[name].TableName;
   
@@ -313,18 +371,23 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
-            last: data ? id(data.LastEvaluatedKey) : null
+            last: data ? ID(data.LastEvaluatedKey) : null
           });
         });
       });
     },
 
-    scan: function (name, params, last) {
+    scan: function (name, params, last, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
+      if (isGCP) return gcp.table.scan(me, name, params, last, limit);
+
       var tmp = params;
       tmp.TableName = me[name].TableName;
       if (!tmp.Limit && me[name].Limit !== -1) tmp.Limit = me[name].Limit;
@@ -343,21 +406,27 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
-            last: data ? id(data.LastEvaluatedKey) : null
+            last: data ? ID(data.LastEvaluatedKey) : null
           });
         });
       });
     },
 
-    query: function (name, params, last) {
+    query: function (name, params, last, limit, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
-  
+
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+
+      if (isGCP) return gcp.table.query(me, name, params, last, limit);
+
       var tmp = params;
       tmp.TableName = me[name].TableName;
       if (!tmp.Limit && me[name].Limit !== -1) tmp.Limit = me[name].Limit;
+      if (limit) tmp.Limit = limit;
 
       if (last) {
         tmp.ExclusiveStartKey = {};
@@ -373,18 +442,23 @@ module.exports = function (params) {
           if (err) reject(err);
           else resolve({
             data: data ? data.Items : [],
-            last: data ? id(data.LastEvaluatedKey) : null
+            last: data ? ID(data.LastEvaluatedKey) : null
           });
         });
       });
     },
   
-    create: function (name, params) {
+    create: function (name, params, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
   
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+  
+      if (isGCP) return gcp.table.create(me, name, params);
+
       var tmp = {
         Item: params,
         TableName: me[name].TableName,
@@ -398,12 +472,17 @@ module.exports = function (params) {
       });
     },
   
-    update: function (name, id, params) {
+    update: function (name, id, params, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
+      if (isGCP) return gcp.table.update(me, name, id, params);
+
       var Key = {};
       Key[me[name].Key] = id;
   
@@ -420,12 +499,17 @@ module.exports = function (params) {
       });
     },
   
-    remove: function (name, params) {
+    remove: function (name, params, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
   
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
+  
+      if (isGCP) return gcp.table.remove(me, name, params);
+
       var key = {};
       key[me[name].Key] = params[me[name].Key];
   
@@ -442,12 +526,17 @@ module.exports = function (params) {
       });
     },
   
-    delete: function (name, id) {
+    delete: function (name, id, database) {
       if (!me[name] || !me[name].TableName) 
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+
+      var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
+      isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
+      if (isGCP) return gcp.table.delete(me, name, id);
+
       var key = {};
       key[me[name].Key] = id;
   

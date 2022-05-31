@@ -21,12 +21,12 @@ function init (params) {
 }
 
 module.exports = {
-    or: or,
-    and: and,
-    set: set,
-    init: init,
-    index: index,
-    unset: unset,
-    or_key: or_key,
-    and_key: and_key,
+  or: or,
+  and: and,
+  set: set,
+  init: init,
+  index: index,
+  unset: unset,
+  or_key: or_key,
+  and_key: and_key,
 };
