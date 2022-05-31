@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/thefinerthingsllc/table#readme",
   "dependencies": {
+    "@google-cloud/datastore": "^6.6.2",
     "aws-sdk": "^2.734.0",
     "bluebird": "^3.7.2"
   }
