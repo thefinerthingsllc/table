@@ -1,7 +1,7 @@
 {
   "name": "@thefinerthings/table",
   "version": "2.2.0",
-  "description": "promise based ORM for AWS DynamoDB",
+  "description": "promise based ORM for AWS DynamoDB or GCP Datastore",
   "main": "index",
   "repository": {
     "type": "git",
@@ -10,8 +10,10 @@
   "keywords": [
     "promise",
     "dynamodb",
+    "datastore",
     "aws-sdk",
     "aws",
+    "gcp",
     "orm"
   ],
   "author": "The Finer Things LLC",
