@@ -14,10 +14,16 @@ var set = require('./write').set;
 var unset = require('./write').unset;
 
 function init (params) {
+
+  if (
+    !params.region || !params.secretAccessKey || !params.accessKeyId
+  ) return false;
+
   return {
     dynamodb: dynamodb(params),
     docClient: docClient(params),
   };
+  
 }
 
 module.exports = {

@@ -12,8 +12,8 @@ module.exports = function (params) {
   var res = aws.init(params);
   
   me['info'] = params;
-  me['dynamodb'] = res.dynamodb;
-  me['docClient'] = res.docClient;
+  if (res) me['dynamodb'] = res.dynamodb;
+  if (res) me['docClient'] = res.docClient;
 
   if (params.gcp) {
     var gres = gcp.init(params.gcp);
