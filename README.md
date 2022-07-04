@@ -1,20 +1,13 @@
-# table
-## dynamodb, datastore
+# table - dynamodb, datastore
 
-### Installing
+## Installing
 ```s
 npm i @thefinerthings/table
 ```
 
-### Usage
+## Using
 ```js
 const Table = require('@thefinerthings/table')
-
-const table = Table({
-  region: '<aws region>',
-  accessKeyId: '<aws access key id>',
-  secretAccessKey: '<aws secret access key>',
-})
 
 /* gcp - datastore
 
@@ -23,6 +16,24 @@ const table = Table({
 })
 
 */
+
+/* test - json
+
+const table = Table({
+  test: { 
+    enabled: true,
+    table_name: 'file_path.ext',
+    ...
+  },
+})
+
+*/
+
+const table = Table({
+  region: '<aws region>',
+  accessKeyId: '<aws access key id>',
+  secretAccessKey: '<aws secret access key>',
+})
 
 const id = 'testId';
 const name = table.set('aws-dynamodb-table-name').TableName;
@@ -34,7 +45,27 @@ table.get(name, id).then(data => {
 ```
 * The schema for the following methods assumes that your data is a bunch of strings. Queries or scans can be customized through the `scan` or  `query` functions to account for any other data types that have been defined.
 
-### API
+## Testing
+There is a local database that is structured using simple file system paradigms stored as `JSON`. To use it, you need to set the `test` parameters with the following information:
+
+```js
+
+const path = require('path');
+
+// ...
+const table = Table({
+  test: {
+    enabled: true,
+    users: path(__dirname, '../seeds/users.json'),
+    // ...
+  }
+});
+
+```
+
+Once those parameters are set, the `table` constant can be used as though it were communicating with an external database on GCP or AWS. `enabled` must be set to `true` to override calls to GCP or AWS. It is defaulted to `false` to avoid mistakes upon deployment. This is not `thread safe`.
+
+## API
 ```js
 Table({
   region: '<aws region>',
@@ -219,7 +250,9 @@ table.delete(name, id, database)
 * `id` - string (id of the item you wish to delete from the table)
 * `database` - string ('gcp')
 
-#### Example
+
+
+### Example
 ```js
 const Table = require('@thefinerthings/table')
 

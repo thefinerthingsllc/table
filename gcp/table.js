@@ -1,15 +1,6 @@
+'use strict';
+
 module.exports = {
-  set: function (me, table_name, key, limit) {
-    if (!table_name) return false;
-
-    me[table_name] = {
-      Key: key || 'id',
-      Limit: limit || -1,
-      TableName: table_name,
-    };
-
-    return me[table_name];
-  },
 
   table: function (me, name) {
     if (!me[name] || !me[name].TableName) return;
@@ -172,14 +163,6 @@ module.exports = {
     });
   },
 
-  // scan: function (name, params, last) {
-  //   if (!me[name] || !me[name].TableName) return;
-  // },
-
-  // query: function (name, params, last) {
-  //   if (!me[name] || !me[name].TableName) return;
-  // },
-
   create: function (me, name, params) {
     if (!me[name] || !me[name].TableName) return;
     
@@ -224,4 +207,5 @@ module.exports = {
     if (!me[name] || !me[name].TableName) return;
     return me.datastore.delete(me.datastore.key([ name, id ]));
   }
+  
 };

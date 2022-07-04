@@ -1,7 +1,7 @@
 {
   "name": "@thefinerthings/table",
-  "version": "2.2.2",
-  "description": "promise based ORM for AWS DynamoDB or GCP Datastore",
+  "version": "2.2.3",
+  "description": "promise based ORM for AWS - DynamoDB, GCP - Datastore",
   "main": "index",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
     "gcp",
     "orm"
   ],
-  "author": "The Finer Things LLC",
+  "author": "The Finer Things, LLC",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/thefinerthingsllc/table/issues"

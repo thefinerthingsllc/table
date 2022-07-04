@@ -4,8 +4,12 @@ var Promise = require('bluebird');
 
 var aws = require('./aws');
 var gcp = require('./gcp');
+var test = require('./test');
 
-const ID = (last) => (last && last.id) || last || null;
+function ID (last) {
+  return (last && last.id) || last || null;
+}
+
 module.exports = function (params) {
   
   var me = {};
@@ -14,6 +18,8 @@ module.exports = function (params) {
   me['info'] = params;
   if (res) me['dynamodb'] = res.dynamodb;
   if (res) me['docClient'] = res.docClient;
+
+  if (params.test) me['test'] = params.test;
 
   if (params.gcp) {
     var gres = gcp.init(params.gcp);
@@ -39,6 +45,10 @@ module.exports = function (params) {
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+      
+      if (me.test && me.test.enabled) return new Promise(
+        (resolve, reject) => resolve({ name })
+      );
       
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
@@ -77,6 +87,8 @@ module.exports = function (params) {
           reject(`Table, ${name}, does not exist!`);
         });
       
+      if (me.test && me.test.enabled) return test.count(me.test, name);
+
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
     
@@ -99,6 +111,8 @@ module.exports = function (params) {
           reject(`Table, ${name}, does not exist!`);
         });
       
+      if (me.test && me.test.enabled) return test.get(me.test, name, id);
+
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
 
@@ -129,6 +143,8 @@ module.exports = function (params) {
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+
+      if (me.test && me.test.enabled) return test.all(me.test, name, last, limit);
 
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
@@ -164,6 +180,8 @@ module.exports = function (params) {
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+
+      if (me.test && me.test.enabled) return test.all(me.test, name, last, limit);
 
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
@@ -201,6 +219,8 @@ module.exports = function (params) {
           reject(`Table, ${name}, does not exist!`);
         });
   
+      if (me.test && me.test.enabled) return test.index(me.test, name, index, params, last, limit);
+
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
 
@@ -238,6 +258,8 @@ module.exports = function (params) {
           reject(`Table, ${name}, does not exist!`);
         });
   
+      if (me.test && me.test.enabled) return test.all(me.test, name, index, key, array, last, limit);
+
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
 
@@ -275,6 +297,8 @@ module.exports = function (params) {
           reject(`Table, ${name}, does not exist!`);
         });
       
+      if (me.test && me.test.enabled) return test.find(me.test, name, params, last, limit);
+
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
@@ -311,6 +335,8 @@ module.exports = function (params) {
           reject(`Table, ${name}, does not exist!`);
         });
   
+      if (me.test && me.test.enabled) return test.all(me.test, name, params, last, limit);
+        
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
@@ -347,6 +373,8 @@ module.exports = function (params) {
           reject(`Table, ${name}, does not exist!`);
         });
       
+      if (me.test && me.test.enabled) return test.all(me.test, name, last, limit);
+
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
@@ -386,7 +414,11 @@ module.exports = function (params) {
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
-      if (isGCP) return gcp.table.scan(me, name, params, last, limit);
+      if (isGCP || (me.test && me.test.enabled)) return new Promise(
+        (resolve, reject) => {
+          reject(`This operation for ${name} does not exist!`);
+        }
+      );
 
       var tmp = params;
       tmp.TableName = me[name].TableName;
@@ -421,7 +453,11 @@ module.exports = function (params) {
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
 
-      if (isGCP) return gcp.table.query(me, name, params, last, limit);
+      if (isGCP || (me.test && me.test.enabled)) return new Promise(
+        (resolve, reject) => {
+          reject(`This operation for ${name} does not exist!`);
+        }
+      );
 
       var tmp = params;
       tmp.TableName = me[name].TableName;
@@ -454,6 +490,8 @@ module.exports = function (params) {
           reject(`Table, ${name}, does not exist!`);
         });
   
+      if (me.test && me.test.enabled) return test.create(me.test, name, params);
+
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
@@ -477,6 +515,8 @@ module.exports = function (params) {
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+
+      if (me.test && me.test.enabled) return test.update(me.test, name, id, params);
 
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
@@ -504,7 +544,9 @@ module.exports = function (params) {
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
-  
+
+      if (me.test && me.test.enabled) return test.remove(me.test, name, params);
+
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
   
@@ -531,6 +573,8 @@ module.exports = function (params) {
         return new Promise((resolve, reject) => {
           reject(`Table, ${name}, does not exist!`);
         });
+
+      if (me.test && me.test.enabled) return test.delete(me.test, name, id);
 
       var isGCP = me.datastore && database && database.toLowerCase() === 'gcp';
       isGCP = isGCP || (me.datastore && (!me.dynamodb || !me.docClient));
