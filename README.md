@@ -49,7 +49,6 @@ table.get(name, id).then(data => {
 There is a local database that is structured using simple file system paradigms stored as `JSON`. To use it, you need to set the `test` parameters with the following information:
 
 ```js
-
 const path = require('path');
 
 // ...
@@ -60,7 +59,6 @@ const table = Table({
     // ...
   }
 });
-
 ```
 
 Once those parameters are set, the `table` constant can be used as though it were communicating with an external database on GCP or AWS. `enabled` must be set to `true` to override calls to GCP or AWS. It is defaulted to `false` to avoid mistakes upon deployment. This is `not` thread-safe.
