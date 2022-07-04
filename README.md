@@ -63,7 +63,7 @@ const table = Table({
 
 ```
 
-Once those parameters are set, the `table` constant can be used as though it were communicating with an external database on GCP or AWS. `enabled` must be set to `true` to override calls to GCP or AWS. It is defaulted to `false` to avoid mistakes upon deployment. This is not `thread safe`.
+Once those parameters are set, the `table` constant can be used as though it were communicating with an external database on GCP or AWS. `enabled` must be set to `true` to override calls to GCP or AWS. It is defaulted to `false` to avoid mistakes upon deployment. This is `not` thread-safe.
 
 ## API
 ```js
