@@ -26,17 +26,17 @@ module.exports = {
 
   all: function (me, name, last, limit) {
     if (!me[name]) return;
-    return json.read(me[name]);
+    return json.read(me[name]).then(data => ({ data: data }));
   },
 
   index: function (me, name, index, params, last, limit) {
     if (!me[name]) return;
-    return json.read(me[name]);
+    return json.read(me[name]).then(data => ({ data: data }));
   },
 
   index_search: function (me, name, index, key, array, last, limit) {
     if (!me[name]) return;
-    return json.read(me[name]);
+    return json.read(me[name]).then(data => ({ data: data }));
   },
 
   find: function (me, name, params, last, limit) {
@@ -58,7 +58,7 @@ module.exports = {
 
       });
       
-      return res;
+      return { data: res };
 
     });
 
@@ -83,7 +83,7 @@ module.exports = {
 
       });
       
-      return res;
+      return { data: res };
 
     });
 
@@ -108,7 +108,7 @@ module.exports = {
 
       });
       
-      return res;
+      return { data: res };
 
     });
 
@@ -123,7 +123,7 @@ module.exports = {
       tmp.push(params);
       return tmp;
     }).then(
-      data => json.write(me[name], data).then(() => data)
+      data => json.write(me[name], data).then(() => params)
     );
 
   },
@@ -149,7 +149,7 @@ module.exports = {
       })
 
     ).then(
-      data => json.write(me[name], data).then(() => data)
+      data => json.write(me[name], data).then(() => params)
     );
 
   },
@@ -175,7 +175,7 @@ module.exports = {
       })
 
     ).then(
-      data => json.write(me[name], data).then(() => data)
+      data => json.write(me[name], data).then(() => params)
     );
 
   },
@@ -187,7 +187,7 @@ module.exports = {
     return json.read(me[name]).then(
       data => data.filter(d => d.id != id)
     ).then(
-      data => json.write(me[name], data).then(() => data)
+      data => json.write(me[name], data).then(() => id)
     );
 
   }
