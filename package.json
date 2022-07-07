@@ -1,6 +1,6 @@
 {
   "name": "@thefinerthings/table",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "promise based ORM for AWS - DynamoDB, GCP - Datastore",
   "main": "index",
   "repository": {

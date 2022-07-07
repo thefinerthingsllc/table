@@ -63,6 +63,14 @@ const table = Table({
 
 Once those parameters are set, the `table` constant can be used as though it were communicating with an external database on GCP or AWS. `enabled` must be set to `true` to override calls to GCP or AWS. It is defaulted to `false` to avoid mistakes upon deployment. This is `not` thread-safe.
 
+### Note
+There is a `bash` script in the `test` directory that can help you create `json` files for this feature. Make sure to run this command on that file before running it on the respective directory mentioned in the comments inside of the file, `to_json.bash`:
+```bash
+$ chmod +x to_json.bash
+# to run the file run the following command
+$ ./to_json.bash
+```
+
 ## API
 ```js
 Table({
