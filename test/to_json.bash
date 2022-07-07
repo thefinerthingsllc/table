@@ -23,7 +23,8 @@ do
   echo ""
 
   touch `cat "${t}"`
-  rm "${t}"
+  echo "[]">`cat "${t}"`
+  rm "${t}" 
 
 done
 
