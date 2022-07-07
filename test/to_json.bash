@@ -28,4 +28,6 @@ do
 
 done
 
+cd ..
+
 exit 0
