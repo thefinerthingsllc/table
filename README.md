@@ -212,7 +212,9 @@ This is good to use for tables with a partition and sort key.
 Example
 ```js
 table.query(
-  name, {
+  name,
+  // params:
+  {
     IndexName: 'partition-sort-index',
     KeyConditionExpression: '#t = :em',
     ExpressionAttributeNames: {
@@ -222,7 +224,7 @@ table.query(
       ":em": 'value',
     },
     ScanIndexForward: false,
-  }, params
+  }
 )
 ```
 
