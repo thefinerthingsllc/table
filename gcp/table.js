@@ -198,7 +198,7 @@ module.exports = {
 
     const key = me.datastore.key([ name, params[table.Key] ]);
     return me.datastore.get(key).then(([ data ]) => {
-      for (let k in params) k != table.Key ? '' : delete data[k];
+      for (let k in params) k != table.Key && delete data[k];
       return me.datastore.upsert({ key, data });
     });
   },

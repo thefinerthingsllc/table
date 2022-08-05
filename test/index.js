@@ -165,9 +165,8 @@ module.exports = {
         var tmp = d;
 
         if (tmp.id == params.id) {
-          for (var k in params) {
-            delete tmp[k];
-          }
+          for (var k in params) delete tmp[k];
+          tmp.id = params.id;
         }
 
         return tmp;
